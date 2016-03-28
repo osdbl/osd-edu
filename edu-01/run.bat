@@ -1,0 +1,1 @@
+java -Djava.util.logging.config.file=conf/logging.properties -cp bin net.croz.osd.edu.ShapesApp
