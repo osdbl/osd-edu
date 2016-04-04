@@ -1,9 +1,14 @@
 package net.croz.osd.edu.shapes;
 
 
-public class Square extends AbstractShape {
+public class Square extends RegularPoligon {
 	@Override
-	public double area() {
-		return dimension*dimension;
+	public double perimeter() {
+		return 4*sideLength;
+	}
+
+	@Override
+	public double angle() {
+		return 90;
 	}
 }

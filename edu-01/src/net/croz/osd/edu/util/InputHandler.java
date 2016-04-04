@@ -3,22 +3,22 @@ package net.croz.osd.edu.util;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
 import net.croz.osd.edu.util.config.ShapeConfig;
 
 public class InputHandler {
 	public static Scanner scanner = new Scanner(System.in);
 	
 	public static String inShape;
-	public static double inDimension;
+	public static double inSize;
 		
 	public static void handleInput() {
 		while (true) {
-			System.out.println("Enter shape " + getShapeMenu() + " or quit [q]:" );
+			System.out.print("Enter shape " + getShapeMenu() + " or quit [q]: " );
 			inShape = scanner.next();
-			if (inShape.equalsIgnoreCase("q")) {
-				System.out.println("Terminated!");
-				System.exit(ExitStatus.USER_QUIT.status);
-			}
+			quitHandler(inShape);
+			
 			if (Arrays.asList(ShapeConfig.SUPPORTED_SHAPES).contains(inShape.toLowerCase())) {
 				break;
 			}
@@ -27,15 +27,17 @@ public class InputHandler {
 			}
 		}
 		
-		System.out.println("Enter shape dimension:");
 		while (true) {
+			System.out.print("Enter shape size or quit [q]: ");
+			String size = scanner.next();
+			quitHandler(size);
+			
 			try {
-				inDimension = Double.parseDouble(scanner.next()); 
-				// NK Pitanje: Zašto ne radi nextDouble()
+				inSize = Double.parseDouble(size); 
 				break;
 			}
 			catch (Exception e) {
-				System.out.println("Ivalid shape dimension: " + inDimension);
+				System.out.println("Ivalid size: " + size);
 			}
 		}		
 	}
@@ -49,5 +51,12 @@ public class InputHandler {
 		shapeMenu += "]";
 		
 		return shapeMenu;
+	}
+	
+	private static void quitHandler(String input) {
+		if (input.equalsIgnoreCase("q")) {
+			System.out.println("Terminated!");
+			System.exit(ExitStatus.USER_QUIT.status);
+		}
 	}
 }

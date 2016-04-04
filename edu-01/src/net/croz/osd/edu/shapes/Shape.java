@@ -1,6 +1,7 @@
 package net.croz.osd.edu.shapes;
 
 public interface Shape {
-	void setDimension(double dimension);
+	ShapeType getType();
 	double area();
+	double perimeter();
 }
