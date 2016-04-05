@@ -2,16 +2,22 @@ package net.croz.osd.edu;
 
 import net.croz.osd.edu.shapes.RegularPoligon;
 import net.croz.osd.edu.shapes.Shape;
+import net.croz.osd.edu.shapes.ShapeException;
 import net.croz.osd.edu.shapes.ShapeType;
+import net.croz.osd.edu.util.InputHandler;
 
 public class ShapeConsumer {
 	private Shape shape;
 	
-	public ShapeConsumer(Shape shape) {
-		this.shape = shape;
+	public ShapeConsumer(String shape, double size) throws ShapeException {
+		this.shape = ShapeFactory.getShape(shape, size);
+		if (shape == null) {
+			System.out.println("Shape " +  shape + " is not implemented yet!");
+			throw new ShapeException("Shape " +  shape + " is not implemented yet!");
+		}
 	}
 	
-	public void shapeInfo() {
+	public void printShapeInfo() {
 		double area = shape.area();
 		double perimeter = shape.perimeter();
 		
@@ -20,6 +26,6 @@ public class ShapeConsumer {
 		System.out.println("	Area = " + area);
 		System.out.println("	Perimeter = " + perimeter);
 		if (!shape.getType().equals(ShapeType.CIRCLE))
-			System.out.println("	Perimeter = " + ((RegularPoligon) shape).angle());
+			System.out.println("	Angle = " + ((RegularPoligon) shape).angle());
 	}
 }
