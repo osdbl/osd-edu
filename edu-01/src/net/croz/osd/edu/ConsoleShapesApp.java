@@ -24,7 +24,7 @@ public class ConsoleShapesApp {
 			try {
 				ShapeConsumer consumer = new ShapeConsumer(inShape, inSize);
 				consumer.printShapeInfo();
-			} catch (ShapeException e) { continue; }		
+			} catch (ShapeException e) { /*continue;*/ }		
 		}
 	}
 }

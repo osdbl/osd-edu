@@ -1,22 +1,27 @@
 package net.croz.osd.edu;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import com.sun.xml.internal.ws.api.pipe.NextAction;
-
 import net.croz.osd.edu.util.ExitStatus;
+import net.croz.osd.edu.util.config.Configuration;
 import net.croz.osd.edu.util.config.ShapeConfig;
 
 public class ConsoleInputHandler {
 	public static Scanner scanner = new Scanner(System.in);
+	// TODO static rb consequences??
+	static ResourceBundle rb = 
+		ResourceBundle.getBundle("net.croz.osd.edu.i18n.shape-message", new Locale(Configuration.locale)); 
 	
 	public static String inShape;
 	public static double inSize;
 		
 	public static void handleInput() {
 		while (true) {
-			System.out.print("Enter shape " + getShapeMenu() + " or quit [q]: " );
+			System.out.print(MessageFormat.format(rb.getString("enter.shape"), getShapeMenu()));
 			inShape = scanner.next();
 			quitHandler(inShape);
 			
@@ -24,12 +29,12 @@ public class ConsoleInputHandler {
 				break;
 			}
 			else {
-				System.out.println("Ivalid shape: " + inShape);
+				System.out.println(rb.getString("invalid.shape") + inShape);
 			}
 		}
 		
 		while (true) {
-			System.out.print("Enter shape size or quit [q]: ");
+			System.out.print(rb.getString("enter.size"));
 			String size = scanner.next();
 			quitHandler(size);
 			
@@ -38,7 +43,7 @@ public class ConsoleInputHandler {
 				break;
 			}
 			catch (Exception e) {
-				System.out.println("Ivalid size: " + size);
+				System.out.println(rb.getString("invalid.size") + size);
 			}
 		}		
 	}
@@ -56,7 +61,7 @@ public class ConsoleInputHandler {
 	
 	private static void quitHandler(String input) {
 		if (input.equalsIgnoreCase("q")) {
-			System.out.println("Terminated!");
+			System.out.println(rb.getString("quit.app"));
 			System.exit(ExitStatus.USER_QUIT.status);
 		}
 	}
