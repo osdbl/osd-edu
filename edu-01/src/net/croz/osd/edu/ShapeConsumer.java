@@ -4,16 +4,16 @@ import net.croz.osd.edu.shapes.RegularPoligon;
 import net.croz.osd.edu.shapes.Shape;
 import net.croz.osd.edu.shapes.ShapeException;
 import net.croz.osd.edu.shapes.ShapeType;
-import net.croz.osd.edu.util.InputHandler;
+import net.croz.osd.edu.util.ShapeFactory;
 
 public class ShapeConsumer {
 	private Shape shape;
 	
 	public ShapeConsumer(String shape, double size) throws ShapeException {
 		this.shape = ShapeFactory.getShape(shape, size);
-		if (shape == null) {
+		if (this.shape == null) {
 			System.out.println("Shape " +  shape + " is not implemented yet!");
-			throw new ShapeException("Shape " +  shape + " is not implemented yet!");
+			throw new ShapeException("");
 		}
 	}
 	

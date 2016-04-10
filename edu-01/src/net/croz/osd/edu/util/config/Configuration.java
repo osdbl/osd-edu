@@ -6,7 +6,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.croz.osd.edu.ShapesApp;
 import net.croz.osd.edu.util.ExitStatus;
 
 public class Configuration {

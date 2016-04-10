@@ -1,13 +1,14 @@
-package net.croz.osd.edu.util;
+package net.croz.osd.edu;
 
 import java.util.Arrays;
 import java.util.Scanner;
 
 import com.sun.xml.internal.ws.api.pipe.NextAction;
 
+import net.croz.osd.edu.util.ExitStatus;
 import net.croz.osd.edu.util.config.ShapeConfig;
 
-public class InputHandler {
+public class ConsoleInputHandler {
 	public static Scanner scanner = new Scanner(System.in);
 	
 	public static String inShape;
