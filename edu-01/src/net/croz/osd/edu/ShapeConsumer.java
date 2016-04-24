@@ -14,7 +14,7 @@ import net.croz.osd.edu.util.config.Configuration;
 public class ShapeConsumer {
 	private Shape shape;
 	double enteredSize = 0.0;
-	ResourceBundle rb = 
+	public static ResourceBundle rb = 
 		ResourceBundle.getBundle("net.croz.osd.edu.i18n.shape-message", new Locale(Configuration.locale));
 	
 	public ShapeConsumer(String shape, double size) throws ShapeException {
@@ -30,7 +30,7 @@ public class ShapeConsumer {
 		double area = shape.area();
 		double perimeter = shape.perimeter();
 		
-		System.out.println("");
+		System.out.println();
 		System.out.println(rb.getString("entered.size") + enteredSize);
 		System.out.println(rb.getString("instance") + shape);
 		System.out.println(rb.getString("type") + shape.getType());
