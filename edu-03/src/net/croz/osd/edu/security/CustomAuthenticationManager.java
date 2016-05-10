@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class CustomAuthenticationManager implements AuthenticationManager {
 	@Autowired
 	UserDetailsService userDetailsService;
