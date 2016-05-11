@@ -9,6 +9,7 @@ import net.croz.osd.edu.services.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +25,7 @@ public class Main {
 		Main main = ctx.getBean(Main.class);
 		main.doAuthenticate();
 		main.doHello();
+		main.encodePassword();
 	}
 	
 	private void doAuthenticate() {
@@ -38,6 +40,21 @@ public class Main {
 	}
 	
 	private void doHello() {
-		service.hello();
+		service.helloUser();
+	}
+	
+	private void encodePassword() {
+		while (true) {
+			System.out.print("Enter raw password or quit [q]:");
+			String rawPassword = scanner.next();
+			if ("q".equalsIgnoreCase(rawPassword)) System.exit(0);
+			try {
+				System.out.println("Encoded password:" + service.encode(rawPassword));
+			}
+			catch (AccessDeniedException e) {
+				System.out.println(e.getMessage());
+			}
+			
+		}
 	}
 }

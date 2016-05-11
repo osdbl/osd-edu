@@ -1,18 +1,23 @@
 package net.croz.osd.edu.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceImpl implements Service{
 	@Autowired
 	private AuthenticationManager authManager;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public boolean doAuthenticate(String username, String password) {
@@ -30,7 +35,7 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public void hello() {
+	public void helloUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		String username;
@@ -43,5 +48,10 @@ public class ServiceImpl implements Service{
 		}
 		
 		System.out.println("Hello " + username + "!");
+	}
+
+	@Override
+	public String encode(String rawPassword) {
+		return passwordEncoder.encode(rawPassword);
 	}
 }
