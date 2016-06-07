@@ -1,9 +1,11 @@
 package net.croz.osd.edu.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 
 @Configuration
@@ -20,4 +22,12 @@ public class AppConfig {
 		return propertiesFactoryBean;
 	}
 	*/
+	
+	@Bean
+	public ResourceBundleMessageSource resourceBundleMessageSource() {
+		ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+		resourceBundleMessageSource.setBasename("net.croz.osd.edu.i18n.shape-message");
+		return resourceBundleMessageSource;
+	}
+	
 }
