@@ -8,15 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoginCard extends JPanel {
-	@Autowired LanguagesPanel LanguagesPanel;
+public class CardLogin extends JPanel {
+	@Autowired MenuPanel menuPanel;
 	@Autowired LoginFormPanel loginFormPanel;
 	
 	public JPanel init() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(LanguagesPanel.init(), this);
+		add(menuPanel.init(false), this);
 		add(loginFormPanel.init(), this);
 		add(Box.createVerticalGlue(), this);
-		return this;
+		
+        return this;
 	}
 }

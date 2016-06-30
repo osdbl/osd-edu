@@ -2,29 +2,45 @@ package net.croz.osd.edu.ui.element;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.util.Locale;
 
 import javax.swing.JFrame;
 
 import net.croz.osd.edu.ui.GuiService;
+import net.croz.osd.edu.ui.action.LanguageButtonActionListener;
+import net.croz.osd.edu.ui.action.LocaleChangeListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainFrame extends JFrame {
-	@Autowired LoginCard loginCard;
-	@Autowired ShapesCard shapesCard;
+public class MainFrame extends JFrame implements LocaleChangeListener {
+	@Autowired ResourceBundleMessageSource messageSource;
+	@Autowired LanguageButtonActionListener languageButtonActionListener;
 	
-	public void init() {
-		setTitle("Shape application");
+	@Autowired CardLogin cardLogin;
+	@Autowired CardShapes cardShapes;
+	
+	String messageKey;
+	
+	public void init(String messageKey) {
+		this.messageKey = messageKey;
+		setTitle(messageSource.getMessage(messageKey, null, Locale.getDefault()));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setPreferredSize(new Dimension(600, 500));
 		setMinimumSize(new Dimension(600, 500));
 		getContentPane().setLayout(new CardLayout());
-		getContentPane().add(loginCard.init(), GuiService.LOGIN_PANEL);
-		getContentPane().add(shapesCard.init(), GuiService.SHAPE_PANEL);
+		getContentPane().add(cardLogin.init(), GuiService.LOGIN_PANEL);
+		getContentPane().add(cardShapes.init(), GuiService.SHAPE_PANEL);
 	
 		pack();
         setVisible(true);
+        languageButtonActionListener.addLocaleChangeListener(this);
     }
+
+	@Override
+	public void localeChange(Locale locale) {
+		setTitle(messageSource.getMessage(messageKey, null, locale));
+	}
 }

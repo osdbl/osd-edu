@@ -31,5 +31,4 @@ public class LocalizedLabel extends JLabel implements LocaleChangeListener {
 	public void localeChange(Locale locale) {
 		setText(messageSource.getMessage(messageKey, null, locale));
 	}
-
 }

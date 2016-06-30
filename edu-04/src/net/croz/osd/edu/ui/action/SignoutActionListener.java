@@ -7,17 +7,23 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 import net.croz.osd.edu.ui.GuiService;
+import net.croz.osd.edu.ui.element.LoginFormPanel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LogoutButtonActionListener implements ActionListener {
-	@Autowired
-	private JFrame mainFrame;
+public class SignoutActionListener implements ActionListener {
+	@Autowired private JFrame mainFrame;
+	@Autowired LoginFormPanel loginFormPanel;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		loginFormPanel.usernameField.setText(null);
+		loginFormPanel.passwordField.setText(null);
+		SecurityContextHolder.getContext().setAuthentication(null);
+		
 		CardLayout cardLayout = (CardLayout) mainFrame.getContentPane().getLayout();
 		cardLayout.show(mainFrame.getContentPane(), GuiService.LOGIN_PANEL);
 	}

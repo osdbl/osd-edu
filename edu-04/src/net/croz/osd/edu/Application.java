@@ -1,9 +1,9 @@
 package net.croz.osd.edu;
 
 import net.croz.osd.edu.conf.AppConfig;
+import net.croz.osd.edu.conf.ShapeConfig;
 import net.croz.osd.edu.conf.SwingConfig;
 import net.croz.osd.edu.ui.GuiService;
-import net.croz.osd.edu.util.config.ShapeConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

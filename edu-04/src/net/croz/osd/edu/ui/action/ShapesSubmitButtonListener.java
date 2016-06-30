@@ -3,30 +3,41 @@ package net.croz.osd.edu.ui.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import net.croz.osd.edu.ShapeConsumer;
-import net.croz.osd.edu.shapes.ShapeException;
-import net.croz.osd.edu.ui.element.ShapesComboBox;
+import net.croz.osd.edu.shapes.RegularPoligon;
+import net.croz.osd.edu.shapes.Shape;
+import net.croz.osd.edu.shapes.ShapeFactory;
+import net.croz.osd.edu.shapes.ShapeType;
+import net.croz.osd.edu.ui.element.LocalizedComboBox;
 import net.croz.osd.edu.ui.element.ShapesSizeField;
-import net.croz.osd.edu.util.ShapeComboModel;
+import net.croz.osd.edu.ui.model.MessageAwareOutTableModel;
+import net.croz.osd.edu.ui.model.ShapeComboModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ShapesSubmitButtonListener implements ActionListener {
-	@Autowired ShapesComboBox shapesComboBox;
+	LocalizedComboBox localizedComboBox;
+	public void setLocalizedComboBox(LocalizedComboBox localizedComboBox) {
+		this.localizedComboBox = localizedComboBox;
+	}
+
 	@Autowired ShapesSizeField shapesSizeField;
+	@Autowired MessageAwareOutTableModel tableModel;
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		try {
-			String inShape = ((ShapeComboModel.Item)shapesComboBox.getSelectedItem()).getValue();
-			double inSize = ((Number)shapesSizeField.getValue()).doubleValue();					
-			ShapeConsumer consumer = new ShapeConsumer(inShape, inSize);
-			consumer.printShapeInfo();
-		} catch (ShapeException e) {  
-			//
-		}	
+		String inShape = ((ShapeComboModel.Item)localizedComboBox.getSelectedItem()).value;
+		double inSize = ((Number)shapesSizeField.getValue()).doubleValue();			
+		
+		Shape shape = ShapeFactory.getShape(inShape, inSize);
+		if (shape != null) {
+			Object angle = (shape.getType().equals(ShapeType.CIRCLE)) ? "N/A" : ((RegularPoligon) shape).angle();
+			tableModel.addRow(new Object[] {shape.getType(), angle, shape, inSize, shape.area(), shape.perimeter()});
+		}
+		else {
+			System.out.println("not.implemented");
+			tableModel.addRow(new Object[] {"N/A", "N/A", "N/A", inSize, "N/A", "N/A"});
+		}
 	}
-
 }

@@ -19,6 +19,7 @@ public class LanguageButtonActionListener implements ActionListener {
 		notifyAllListeners(new Locale(language));
 	}
 	
+	
 	public void addLocaleChangeListener(LocaleChangeListener listener){
 		listeners.add(listener);		
 	}

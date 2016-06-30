@@ -16,7 +16,7 @@ public class GuiServiceImpl implements GuiService {
 	public void createAndShowGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	mainFrame.init();
+            	mainFrame.init("app.title");
             }
         });
 	}

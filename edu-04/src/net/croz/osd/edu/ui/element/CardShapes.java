@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShapesCard extends JPanel {
-	@Autowired LanguagesPanel LanguagesPanel;
+public class CardShapes extends JPanel {
+	@Autowired MenuPanel menuPanel;
 	@Autowired ShapesPanel shapesPanel;
 	
 	public JPanel init() {
 		setLayout(new BorderLayout());
-		add(LanguagesPanel.init(), BorderLayout.NORTH);
+		add(menuPanel.init(true), BorderLayout.NORTH);
 		add(shapesPanel.init(), BorderLayout.CENTER);
+		
 		return this;
 	}
 }
