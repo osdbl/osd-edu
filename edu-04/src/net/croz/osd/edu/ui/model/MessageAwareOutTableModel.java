@@ -24,15 +24,20 @@ public class MessageAwareOutTableModel extends DefaultTableModel implements Loca
 	}
 	
 	@Override
+    public boolean isCellEditable(int row, int column) {
+       return false;
+    }
+	
+	@Override
 	public void localeChange(Locale locale) {
 		setColumnIdentifiers(getColumnNames(locale));
 	}
 
 	private String[] getColumnNames(Locale locale) {
 		return new String[] {
+			messageSource.getMessage("instance", null, locale),
 			messageSource.getMessage("type", null, locale),
 			messageSource.getMessage("angle", null, locale),
-			messageSource.getMessage("instance", null, locale),
 			messageSource.getMessage("entered.size", null, locale),
 			messageSource.getMessage("area", null, locale),
 			messageSource.getMessage("perimeter", null, locale)

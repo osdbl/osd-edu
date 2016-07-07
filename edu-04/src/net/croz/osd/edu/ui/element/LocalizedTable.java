@@ -13,6 +13,8 @@ public class LocalizedTable extends JTable {
 
 	public JTable init() {
 		setModel(tableModel.init());
+		getColumnModel().getColumn(0).setPreferredWidth(300);
+		getColumnModel().getColumn(1).setPreferredWidth(250);
 		setFillsViewportHeight(true);
 		return this;
 	}

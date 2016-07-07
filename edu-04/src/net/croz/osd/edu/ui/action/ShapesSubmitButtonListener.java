@@ -2,6 +2,8 @@ package net.croz.osd.edu.ui.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import net.croz.osd.edu.shapes.RegularPoligon;
 import net.croz.osd.edu.shapes.Shape;
@@ -33,11 +35,17 @@ public class ShapesSubmitButtonListener implements ActionListener {
 		Shape shape = ShapeFactory.getShape(inShape, inSize);
 		if (shape != null) {
 			Object angle = (shape.getType().equals(ShapeType.CIRCLE)) ? "N/A" : ((RegularPoligon) shape).angle();
-			tableModel.addRow(new Object[] {shape.getType(), angle, shape, inSize, shape.area(), shape.perimeter()});
+			tableModel.addRow(new Object[] {shape, shape.getType(), angle, format(inSize), format(shape.area()), format(shape.perimeter())});
 		}
 		else {
 			System.out.println("not.implemented");
 			tableModel.addRow(new Object[] {"N/A", "N/A", "N/A", inSize, "N/A", "N/A"});
 		}
+	}
+	
+	private String format(double x) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+		return df.format(x);
 	}
 }
