@@ -1,5 +1,8 @@
 package net.croz.osd.edu.ui;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import net.croz.osd.edu.ui.element.MainFrame;
@@ -9,8 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GuiServiceImpl implements GuiService {
-	@Autowired
-	MainFrame mainFrame;
+	@Autowired MainFrame mainFrame;
 	
 	@Override
 	public void createAndShowGUI() {
@@ -19,5 +21,10 @@ public class GuiServiceImpl implements GuiService {
             	mainFrame.init("app.title");
             }
         });
+	}
+	
+	@Override
+	public void doUserAction(ActionEvent e) {
+		JOptionPane.showMessageDialog(mainFrame, "TODO");
 	}
 }

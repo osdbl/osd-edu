@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 import net.croz.osd.edu.ui.action.LanguageButtonActionListener;
 import net.croz.osd.edu.ui.action.LocaleChangeListener;
 import net.croz.osd.edu.ui.action.SignoutActionListener;
+import net.croz.osd.edu.ui.action.UserActionListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +24,8 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 	@Autowired ResourceBundleMessageSource messageSource;
 	@Autowired LanguageButtonActionListener languageButtonActionListener;
 	@Autowired @Lazy SignoutActionListener signoutActionListener;
+	@Autowired @Lazy UserActionListener userActionListener;
+	
 	
 	JMenu menu;
 	JMenuItem usersMenuItem;
@@ -32,6 +35,7 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 		menu = new JMenu(messageSource.getMessage("menu", null, Locale.getDefault()));
 		
 		usersMenuItem = new JMenuItem(messageSource.getMessage("menu.users", null, Locale.getDefault()), KeyEvent.VK_T);
+		usersMenuItem.addActionListener(userActionListener);
 		menu.add(usersMenuItem);
 		
 		signoutMenuItem = new JMenuItem(messageSource.getMessage("menu.signOut", null, Locale.getDefault()), KeyEvent.VK_T);
