@@ -1,2 +1,37 @@
-TASK 01:
- - Dodati lokalizacijske tekstove za 'ba' i 'rs'
+TASK-01:
+ - Dodati lokalizacijske tekstove za 'ba' i 'rs' tamo gdje fale
+
+TASK-02:
+ - Kada se logirate kao "bob/password" i odaberete "Menu -> Users" pojavi se 
+ popup prozorèiæ s porukom "Access is denied." Treba napraviti lokalizaciju 
+ te poruke po uzoru na ostale komponente.
+ 
+TASK-03:
+ - Prvi i drugi stupac u "Shape" tablici su inicijalno prošireni tako da stane 
+ cijeli pripadajuæi tekst. Kada se promjeni jezik aplikacije izjednaèi se 
+ širina svih stupaca i tekst u ta dva stupca se više ne vidi u cjelost. To je
+ BUG i treba popraviti.
+ 
+TASK-04:
+ - Trenutno su u "security/user.properties" definirana dva korisnika:
+ nklipa/pass123 (ROLE_USER,ROLE_ADMIN)
+ bob/password (ROLE_USER)
+ Treba dodati JDBC provider i u MySql bazi pohraniti još nekoliko korisnika 
+ sa rolama kao i gore. (Imali smo slièno u edu-03 projektu gdje je korištena 
+ embedded Derby baza.)
+
+TASK-05:
+ - Kada se logirate kao korisnik koji ima ROLE_ADMIN i odaberete "Menu -> Users" 
+ pojavi se  popup prozorèiæ s porukom "TODO". To treba maknuti i napraviti da 
+ se otvori novi panel (u card layout-u), koji æe sadržavati tablièni ispis svih
+ postojeæih korisnika sa stupcima: 
+ | USERNAME | ROLE LIST | ENABLED CHECKBOX | ACTIONS |
+ Npr., stavite da prvi redak bude sa praznim USERNAME poljem, a ACTIONS polje sarži 
+ "Add" button. Ostali retci neka sadrže postojeæe korisnike, a ACTION polje sarži 
+ "Remove" button. Treba implementirati osnovne CRUD operacije (Dodavanje novog 
+ korisnika, mjenjanje rola, resetiranje passworda, lock-anje i brisanje postojeæih 
+ korisnika).
+  
+  
+ 
+ 
