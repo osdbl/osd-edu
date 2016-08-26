@@ -31,6 +31,7 @@ public class MessageAwareOutTableModel extends DefaultTableModel implements Loca
 	@Override
 	public void localeChange(Locale locale) {
 		setColumnIdentifiers(getColumnNames(locale));
+		
 	}
 
 	private String[] getColumnNames(Locale locale) {
