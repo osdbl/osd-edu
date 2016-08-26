@@ -30,6 +30,8 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 	JMenu menu;
 	JMenuItem usersMenuItem;
 	JMenuItem signoutMenuItem;
+	public static String message1;
+	public static String title;
 	
 	public JMenuBar init() {
 		menu = new JMenu(messageSource.getMessage("menu", null, Locale.getDefault()));
@@ -42,6 +44,8 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 		signoutMenuItem.addActionListener(signoutActionListener);
 		menu.add(signoutMenuItem);
 		
+		message1 = messageSource.getMessage("acc.denied", null, Locale.getDefault());
+		title = messageSource.getMessage("message1.title", null, Locale.getDefault());
 		add(menu);
 
 		languageButtonActionListener.addLocaleChangeListener(this);
@@ -54,6 +58,8 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 		menu.setText(messageSource.getMessage("menu", null, locale));
 		usersMenuItem.setText(messageSource.getMessage("menu.users", null, locale));
 		signoutMenuItem.setText(messageSource.getMessage("menu.signOut", null, locale));
+		message1 = messageSource.getMessage("acc.denied", null, locale);
+		title = messageSource.getMessage("message1.title", null, locale);
 	}
 
 }

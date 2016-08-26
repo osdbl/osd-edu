@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import net.croz.osd.edu.ui.GuiService;
+import net.croz.osd.edu.ui.element.LocalizedMenuBar;
 import net.croz.osd.edu.ui.element.MainFrame;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,10 @@ public class UserActionListener implements ActionListener {
 			guiService.doUserAction(event); 
 		}
 		catch (AccessDeniedException e) {
-			JOptionPane.showMessageDialog(mainFrame, "Access is denied.");
+			Object m = LocalizedMenuBar.message1;
+			String t = LocalizedMenuBar.title;
+			//JOptionPane.showMessageDialog(mainFrame, m);
+			JOptionPane.showMessageDialog(mainFrame, m, t, 1);
 		}
 	}
 
