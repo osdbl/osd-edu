@@ -21,6 +21,9 @@ public class MainFrame extends JFrame implements LocaleChangeListener {
 	
 	@Autowired CardLogin cardLogin;
 	@Autowired CardShapes cardShapes;
+	@Autowired CustomTable table;
+ 
+	
 	
 	String messageKey;
 	
@@ -28,11 +31,14 @@ public class MainFrame extends JFrame implements LocaleChangeListener {
 		this.messageKey = messageKey;
 		setTitle(messageSource.getMessage(messageKey, null, Locale.getDefault()));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setPreferredSize(new Dimension(800, 600));
-		setMinimumSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(1024, 768));
+		setMinimumSize(new Dimension(1024, 768));
 		getContentPane().setLayout(new CardLayout());
 		getContentPane().add(cardLogin.init(), GuiService.LOGIN_PANEL);
 		getContentPane().add(cardShapes.init(), GuiService.SHAPE_PANEL);
+		getContentPane().add(table.init(), GuiService.USER_PANEL);
+	
+	    
 	
 		pack();
         setVisible(true);
