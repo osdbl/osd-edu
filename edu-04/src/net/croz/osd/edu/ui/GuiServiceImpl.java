@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.croz.osd.edu.ui.element.MainFrame;
-import net.croz.osd.edu.ui.element.UsersTable;
+
 
 @Component
 public class GuiServiceImpl implements GuiService {
