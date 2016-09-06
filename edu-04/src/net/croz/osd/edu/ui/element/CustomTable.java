@@ -267,7 +267,7 @@ public class CustomTable extends JPanel {
 				} else {
 
 					remove(value);
-					PostgreSQLJDBCDelete.deleteUser(value.getId());
+					PostgreSQLJDBCDelete.deleteUser(value.getUsername());
 					fireTableCellUpdated(rowIndex, columnIndex);
 				}
 

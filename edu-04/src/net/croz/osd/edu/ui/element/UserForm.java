@@ -72,7 +72,7 @@ public class UserForm extends JFrame {
 				
 				
 				Data updatedUser = new Data(user.getId(), username.getText(), password.getText(), (String)role.getSelectedItem(), enabled.isSelected(),user.getApplication());
-				PostgreSQLJDBCUpdate.updateUser(updatedUser);
+				PostgreSQLJDBCUpdate.updateUser(user,updatedUser);
 				model.update(user,updatedUser);
 				
 				model.fireTableDataChanged();

@@ -34,7 +34,7 @@ public class SigninActionListener implements ActionListener {
 		
 		try {
 			Authentication authRequest = new UsernamePasswordAuthenticationToken(
-				loginFormPanel.usernameField.getText(), new String(loginFormPanel.passwordField.getPassword()));
+			loginFormPanel.usernameField.getText(), new String(loginFormPanel.passwordField.getPassword()));
 			Authentication authResult = authManager.authenticate(authRequest);
 			SecurityContextHolder.getContext().setAuthentication(authResult);
 			loginFailedLabel.setVisible(false);

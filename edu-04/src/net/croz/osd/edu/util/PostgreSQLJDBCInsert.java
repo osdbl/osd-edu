@@ -1,28 +1,27 @@
 package net.croz.osd.edu.util;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 
-import net.croz.osd.edu.ui.element.CustomTable.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import net.croz.osd.edu.conf.JdbcConfig;
 
 public class PostgreSQLJDBCInsert {
 	   public static void insertUser(String username,String password,String role,boolean enabled )
 	     {
-	       Connection c = null;
+	       Connection c = JdbcConfig.getConnection();
 	       Statement stmt = null;
 	       try {
-	       Class.forName("org.postgresql.Driver");
-	         c = DriverManager
-	            .getConnection("jdbc:postgresql://localhost:5432/postgres",
-	            "postgres", "postgres");
-	         c.setAutoCommit(false);
-	         System.out.println("Opened database successfully");
-
 	         stmt = c.createStatement();
-	         String sql = "INSERT INTO db (username,password,role,enabled) VALUES ('"+username+"','"+password+"','"+role+"',"+enabled+");";
+	         BCryptPasswordEncoder bcpe=new BCryptPasswordEncoder();
+	         String pass=bcpe.encode(password);
+	         String sql = "INSERT INTO users (username,password,enabled) VALUES ('"+username+"','"+pass+"',"+enabled+");";
+	         String sql1 = "INSERT INTO authorities (username,authority) VALUES ('"+username+"','"+role+"');";
 	         stmt.executeUpdate(sql);
+	         stmt.executeUpdate(sql1);
 	         c.commit();
+	         System.out.println("Operation done successfully");
 
 	         stmt.close();
 	         c.close();
@@ -30,6 +29,5 @@ public class PostgreSQLJDBCInsert {
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
 	         System.exit(0);
 	       }
-	       System.out.println("Operation done successfully");
 	     }
 	}

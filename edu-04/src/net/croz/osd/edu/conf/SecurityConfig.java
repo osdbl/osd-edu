@@ -1,5 +1,6 @@
 package net.croz.osd.edu.conf;
 
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -24,20 +26,30 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @ComponentScan(basePackages = "net.croz.osd.edu.security")
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 	@Autowired
 	@Qualifier("propertiesFactoryBean")
 	private Properties userProperties;
-	
+
+	@Bean(name = "dataSource")
+	public DriverManagerDataSource dataSource() {
+	    DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+	    driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
+	    driverManagerDataSource.setUrl("jdbc:postgresql://localhost:5432/osd-edu");
+	    driverManagerDataSource.setUsername("osd");
+	    driverManagerDataSource.setPassword("osd");
+	    return driverManagerDataSource;
+	}
 
 	@Bean
 	public AuthenticationManager providerManager() {
 		List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
 		providers.add(propsAuthenticationProvider());
+		providers.add(jdbcAuthenticationProvider());
 		return new ProviderManager(providers);
 	}
-	
+
 	@Bean
 	DaoAuthenticationProvider propsAuthenticationProvider() {
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -45,12 +57,27 @@ public class SecurityConfig {
 		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 		return daoAuthenticationProvider;
 	}
-	
+
 	@Bean
-    public UserDetailsService propsUserDetailsService() {
-          return new InMemoryUserDetailsManager(userProperties); 
-    }
-	
+	public DaoAuthenticationProvider jdbcAuthenticationProvider() {
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(jdbcUserDetailsService());
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+		return daoAuthenticationProvider;
+	}
+
+	@Bean
+	public UserDetailsService propsUserDetailsService() {
+		return new InMemoryUserDetailsManager(userProperties);
+	}
+
+	@Bean
+	public UserDetailsService jdbcUserDetailsService() {
+		JdbcDaoImpl userDetailsservice = new JdbcDaoImpl();
+		userDetailsservice.setDataSource(dataSource());
+		return userDetailsservice;
+	}
+
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

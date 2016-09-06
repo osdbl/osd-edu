@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.croz.osd.edu.conf.JdbcConfig;
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
 import net.croz.osd.edu.util.PostgreSQLJDBCInsert;
@@ -67,11 +68,9 @@ public class AddUserForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				PostgreSQLJDBCInsert.insertUser(username.getText(), password.getText(), (String) role.getSelectedItem(),
-						enabled.isSelected());
+				PostgreSQLJDBCInsert.insertUser(username.getText(), password.getText(), (String) role.getSelectedItem(), enabled.isSelected());
 				int id = returnId(username.getText());
-				Data updatedUser = new Data(id, username.getText(), password.getText(), (String) role.getSelectedItem(),
-						enabled.isSelected(), "");
+				Data updatedUser = new Data(id, username.getText(), password.getText(), (String) role.getSelectedItem(), enabled.isSelected(), "");
 
 				model.add(updatedUser);
 
@@ -110,16 +109,12 @@ public class AddUserForm extends JFrame {
 
 	public static int returnId(String username) {
 		int id = -1;
-		Connection c = null;
+		Connection c = JdbcConfig.getConnection();
 		Statement stmt = null;
 		try {
-			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
-			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
 			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT id FROM db WHERE username='" + username + "';");
+			ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE username='" + username + "';");
 			while (rs.next()) {
 				id = rs.getInt("id");
 			}
