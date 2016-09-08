@@ -28,6 +28,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import net.croz.osd.edu.conf.JdbcConfig;
 import net.croz.osd.edu.util.PostgreSQLJDBCDelete;
 import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
 
@@ -46,7 +47,10 @@ public class CustomTable extends JPanel {
 				}
 			}
 		};
-		PostgreSQLJDBCReturn.getDatabase(model);
+
+		if (JdbcConfig.getConnection() != null) {
+			PostgreSQLJDBCReturn.getDatabase(model);
+		}
 
 		JTable table = new JTable(model);
 		JButton add = new JButton("Add New User");

@@ -9,6 +9,7 @@ import javax.swing.JMenuItem;
 
 import net.croz.osd.edu.ui.action.LanguageButtonActionListener;
 import net.croz.osd.edu.ui.action.LocaleChangeListener;
+import net.croz.osd.edu.ui.action.ShapesActionListener;
 import net.croz.osd.edu.ui.action.SignoutActionListener;
 import net.croz.osd.edu.ui.action.UserActionListener;
 
@@ -25,11 +26,13 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 	@Autowired LanguageButtonActionListener languageButtonActionListener;
 	@Autowired @Lazy SignoutActionListener signoutActionListener;
 	@Autowired @Lazy UserActionListener userActionListener;
+	@Autowired @Lazy ShapesActionListener shapesActionListener;
 	
 	
 	JMenu menu;
 	JMenuItem usersMenuItem;
 	JMenuItem signoutMenuItem;
+	JMenuItem shapesMenuItem;
 	public static String message1;
 	public static String title;
 	
@@ -39,6 +42,10 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 		usersMenuItem = new JMenuItem(messageSource.getMessage("menu.users", null, Locale.getDefault()), KeyEvent.VK_T);
 		usersMenuItem.addActionListener(userActionListener);
 		menu.add(usersMenuItem);
+
+		shapesMenuItem = new JMenuItem(messageSource.getMessage("menu.shapes", null, Locale.getDefault()), KeyEvent.VK_T);
+		shapesMenuItem.addActionListener(shapesActionListener);
+		menu.add(shapesMenuItem);
 		
 		signoutMenuItem = new JMenuItem(messageSource.getMessage("menu.signOut", null, Locale.getDefault()), KeyEvent.VK_T);
 		signoutMenuItem.addActionListener(signoutActionListener);
@@ -58,6 +65,7 @@ public class LocalizedMenuBar extends JMenuBar implements LocaleChangeListener {
 		menu.setText(messageSource.getMessage("menu", null, locale));
 		usersMenuItem.setText(messageSource.getMessage("menu.users", null, locale));
 		signoutMenuItem.setText(messageSource.getMessage("menu.signOut", null, locale));
+		shapesMenuItem.setText(messageSource.getMessage("menu.shapes", null, locale));
 		message1 = messageSource.getMessage("acc.denied", null, locale);
 		title = messageSource.getMessage("message1.title", null, locale);
 	}

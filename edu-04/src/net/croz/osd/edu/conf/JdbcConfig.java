@@ -16,8 +16,9 @@ public class JdbcConfig {
 			System.out.println("Opened database successfully");
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			//e.printStackTrace();
+			//System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.out.println("Connection to database failed!");
 			return null;
 		}
 

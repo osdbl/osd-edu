@@ -21,7 +21,7 @@ public class MainFrame extends JFrame implements LocaleChangeListener {
 	
 	@Autowired CardLogin cardLogin;
 	@Autowired CardShapes cardShapes;
-	@Autowired CustomTable table;
+	@Autowired CardUsers cardUsers;
  
 	
 	
@@ -36,7 +36,7 @@ public class MainFrame extends JFrame implements LocaleChangeListener {
 		getContentPane().setLayout(new CardLayout());
 		getContentPane().add(cardLogin.init(), GuiService.LOGIN_PANEL);
 		getContentPane().add(cardShapes.init(), GuiService.SHAPE_PANEL);
-		getContentPane().add(table.init(), GuiService.USER_PANEL);
+		getContentPane().add(cardUsers.init(), GuiService.USER_PANEL);
 	
 	    
 	
