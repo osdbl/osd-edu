@@ -266,7 +266,7 @@ public class CustomTable extends JPanel {
 
 				Data value = data.get(rowIndex);
 				if ("edit".equals(aValue)) {
-					UserForm.init(this, value);
+					EditUserForm.init(this, value);
 
 				} else {
 

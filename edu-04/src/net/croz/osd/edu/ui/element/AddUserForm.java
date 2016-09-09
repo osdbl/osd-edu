@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import net.croz.osd.edu.conf.JdbcConfig;
@@ -25,7 +26,7 @@ import net.croz.osd.edu.util.PostgreSQLJDBCInsert;
 public class AddUserForm extends JFrame {
 	public JTextField username;
 	public JLabel u;
-	public JTextField password;
+	public JPasswordField password;
 	public JLabel p;
 	public JComboBox<String> role;
 	public JLabel r;
@@ -36,14 +37,14 @@ public class AddUserForm extends JFrame {
 
 	public AddUserForm(MyTableModel model) {
 
-		super("Add New User Panel");
+		super("Add New User");
 
 		JPanel panel = new JPanel();
 
 		username = new JTextField();
 
 		u = new JLabel("Username :");
-		password = new JTextField();
+		password = new JPasswordField();
 		p = new JLabel("Password :");
 		role = new JComboBox<>(new String[] { "ROLE_USER", "ROLE_ADMIN" });
 		role.setSelectedItem("ROLE_USER");
