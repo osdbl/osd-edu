@@ -1,33 +1,23 @@
 package net.croz.osd.edu.conf;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 public class JdbcConfig {
-	private static Connection c=null;
-	public static Connection connect(String url, String user, String password) {
-		
-		try {
-			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection(url, user, password);
-			c.setAutoCommit(false);
-			System.out.println("Opened database successfully");
 
-		} catch (Exception e) {
-			//e.printStackTrace();
-			//System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.out.println("Connection to database failed!");
-			return null;
-		}
-
-		return c;
-	}
-
-	public static Connection getConnection() {
-
-		return JdbcConfig.connect("jdbc:postgresql://localhost:5432/osd-edu", "osd", "osd");
-
+	@Bean(name = "dataSource")
+	@Scope("prototype")
+	public DataSource dataSource() {
+		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+		driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
+		driverManagerDataSource.setUrl("jdbc:postgresql://localhost:5432/osd-edu");
+		driverManagerDataSource.setUsername("osd");
+		driverManagerDataSource.setPassword("osd");
+		return driverManagerDataSource;
 	}
 }

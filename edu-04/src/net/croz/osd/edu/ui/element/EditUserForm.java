@@ -1,6 +1,5 @@
 package net.croz.osd.edu.ui.element;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,19 +8,21 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
+import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
 import net.croz.osd.edu.util.PostgreSQLJDBCUpdate;
 
-public class EditUserForm extends JFrame {
+@Component
+public class EditUserForm extends JDialog {
 
 	public JTextField username;
 	public JLabel u;
@@ -33,15 +34,17 @@ public class EditUserForm extends JFrame {
 	public JCheckBox enabled;
 	public JButton save;
 	public JButton cancel;
-	//public static Data updatedUser;
 
-	public EditUserForm(MyTableModel model,Data user) {
-		
+	@Autowired
+	PostgreSQLJDBCUpdate upd;
+	
+	@Autowired
+	PostgreSQLJDBCReturn ret;
 
-		super("Edit User");
-		
-		JPanel panel = new JPanel();
+	public EditUserForm init(MyTableModel model, Data user) {
 
+		setTitle("Edit User");
+		setModal(true);
 		username = new JTextField(user.getUsername());
 
 		u = new JLabel("Username :");
@@ -55,29 +58,27 @@ public class EditUserForm extends JFrame {
 		save = new JButton("Save");
 		cancel = new JButton("Cancel");
 		setLayout(new GridLayout(6, 2));
-		//updatedUser = new Data(user.getId(), user.getUsername(), user.getPassword(), user.getRole(), user.isState(),user.getApplication());
 		cancel.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				dispose();
-				
+				getContentPane().removeAll();
 			}
 		});
 		save.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
-				Data updatedUser = new Data(user.getId(), username.getText(), password.getText(), (String)role.getSelectedItem(), enabled.isSelected(),user.getApplication());
-				PostgreSQLJDBCUpdate.updateUser(user,updatedUser);
-				model.update(user,updatedUser);
-				
+
+				Data updatedUser = new Data(username.getText(), password.getText(), (String) role.getSelectedItem(),
+						enabled.isSelected(), user.getApplication());
+				upd.updateUser(user, updatedUser);
+				ret.getDatabase(model);
 				model.fireTableDataChanged();
 				dispose();
+				getContentPane().removeAll();
 			}
 		});
 
@@ -92,7 +93,6 @@ public class EditUserForm extends JFrame {
 		add(save);
 		add(cancel);
 
-		getContentPane().add(panel);
 		setPreferredSize(new Dimension(400, 210));
 		setMinimumSize(new Dimension(400, 210));
 
@@ -100,13 +100,7 @@ public class EditUserForm extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-	}
-
-	public static void init(MyTableModel model,Data user) {
-
-		EditUserForm form = new EditUserForm(model,user);
-		form.setVisible(true);
-
+		return this;
 	}
 
 }

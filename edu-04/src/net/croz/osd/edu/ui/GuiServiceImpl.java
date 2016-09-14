@@ -3,7 +3,6 @@ package net.croz.osd.edu.ui;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class GuiServiceImpl implements GuiService {
 	public void createAndShowGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	mainFrame.init("app.title");
+					mainFrame.init("app.title");			
             }
         });
 	}

@@ -4,26 +4,26 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import net.croz.osd.edu.conf.JdbcConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
 import net.croz.osd.edu.util.PostgreSQLJDBCInsert;
 
-public class AddUserForm extends JFrame {
+@Component
+public class AddUserForm extends JDialog {
 	public JTextField username;
 	public JLabel u;
 	public JPasswordField password;
@@ -34,12 +34,16 @@ public class AddUserForm extends JFrame {
 	public JCheckBox enabled;
 	public JButton save;
 	public JButton cancel;
+	//public JPanel panel;
 
-	public AddUserForm(MyTableModel model) {
+	@Autowired
+	PostgreSQLJDBCInsert ins;
 
-		super("Add New User");
+	public AddUserForm init(MyTableModel model) {
 
-		JPanel panel = new JPanel();
+		setTitle("Add New User");
+		setModal(true);
+		//panel = new JPanel();
 
 		username = new JTextField();
 
@@ -59,24 +63,29 @@ public class AddUserForm extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 				dispose();
-
+				getContentPane().removeAll();
 			}
 		});
 		save.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+				String pass = bcpe.encode(password.getText());
+				
+				ins.insertUser(username.getText(),pass , (String) role.getSelectedItem(),
+						enabled.isSelected());
+				Data newUser = new Data(username.getText(), pass, (String) role.getSelectedItem(),
+						enabled.isSelected(), "");
 
-				PostgreSQLJDBCInsert.insertUser(username.getText(), password.getText(), (String) role.getSelectedItem(), enabled.isSelected());
-				int id = returnId(username.getText());
-				Data updatedUser = new Data(id, username.getText(), password.getText(), (String) role.getSelectedItem(), enabled.isSelected(), "");
-
-				model.add(updatedUser);
+				model.add(newUser);
 
 				model.fireTableDataChanged();
 				dispose();
+				getContentPane().removeAll();
 			}
 		});
 
@@ -91,7 +100,6 @@ public class AddUserForm extends JFrame {
 		add(save);
 		add(cancel);
 
-		getContentPane().add(panel);
 		setPreferredSize(new Dimension(400, 210));
 		setMinimumSize(new Dimension(400, 210));
 
@@ -99,34 +107,7 @@ public class AddUserForm extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 
-	}
-
-	public static void init(MyTableModel model) {
-
-		AddUserForm form = new AddUserForm(model);
-		form.setVisible(true);
-
-	}
-
-	public static int returnId(String username) {
-		int id = -1;
-		Connection c = JdbcConfig.getConnection();
-		Statement stmt = null;
-		try {
-
-			stmt = c.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE username='" + username + "';");
-			while (rs.next()) {
-				id = rs.getInt("id");
-			}
-			rs.close();
-			stmt.close();
-			c.close();
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
-		}
-		return id;
+		return this;
 	}
 
 }

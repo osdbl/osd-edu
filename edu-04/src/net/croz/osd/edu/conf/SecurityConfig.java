@@ -1,6 +1,5 @@
 package net.croz.osd.edu.conf;
 
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -10,9 +9,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -25,22 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
-@ComponentScan(basePackages = "net.croz.osd.edu.security")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 	@Autowired
 	@Qualifier("propertiesFactoryBean")
 	private Properties userProperties;
 
-	@Bean(name = "dataSource")
-	public DriverManagerDataSource dataSource() {
-	    DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-	    driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
-	    driverManagerDataSource.setUrl("jdbc:postgresql://localhost:5432/osd-edu");
-	    driverManagerDataSource.setUsername("osd");
-	    driverManagerDataSource.setPassword("osd");
-	    return driverManagerDataSource;
-	}
+	@Autowired
+	DataSource dataSource;
 
 	@Bean
 	public AuthenticationManager providerManager() {
@@ -74,7 +63,7 @@ public class SecurityConfig {
 	@Bean
 	public UserDetailsService jdbcUserDetailsService() {
 		JdbcDaoImpl userDetailsservice = new JdbcDaoImpl();
-		userDetailsservice.setDataSource(dataSource());
+		userDetailsservice.setDataSource(dataSource);
 		return userDetailsservice;
 	}
 

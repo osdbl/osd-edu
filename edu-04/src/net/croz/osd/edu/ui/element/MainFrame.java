@@ -6,13 +6,13 @@ import java.util.Locale;
 
 import javax.swing.JFrame;
 
-import net.croz.osd.edu.ui.GuiService;
-import net.croz.osd.edu.ui.action.LanguageButtonActionListener;
-import net.croz.osd.edu.ui.action.LocaleChangeListener;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
+
+import net.croz.osd.edu.ui.GuiService;
+import net.croz.osd.edu.ui.action.LanguageButtonActionListener;
+import net.croz.osd.edu.ui.action.LocaleChangeListener;
 
 @Component
 public class MainFrame extends JFrame implements LocaleChangeListener {

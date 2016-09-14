@@ -3,7 +3,6 @@ package net.croz.osd.edu.ui.element;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,34 +12,39 @@ import java.util.List;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import net.croz.osd.edu.conf.JdbcConfig;
 import net.croz.osd.edu.util.PostgreSQLJDBCDelete;
 import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
 
 @org.springframework.stereotype.Component
 public class CustomTable extends JPanel {
+	// @Autowired
+	// DataSource dataSource;
 
-	public CustomTable() {
+	@Autowired
+	PostgreSQLJDBCReturn ret;
+	@Autowired
+	PostgreSQLJDBCDelete del;
 
+	@Autowired
+	AddUserForm addUserForm;
+	@Autowired
+	EditUserForm editUserForm;
+
+	public JPanel init() {
 		MyTableModel model = new MyTableModel() {
 			public Class getColumnClass(int c) {
 				switch (c) {
-				case 4:
+				case 3:
 					return Boolean.class;
 				default:
 					return String.class;
@@ -48,9 +52,9 @@ public class CustomTable extends JPanel {
 			}
 		};
 
-		if (JdbcConfig.getConnection() != null) {
-			PostgreSQLJDBCReturn.getDatabase(model);
-		}
+		// if (dataSource.getConnection() != null) {
+		ret.getDatabase(model);
+		// }
 
 		JTable table = new JTable(model);
 		JButton add = new JButton("Add New User");
@@ -65,47 +69,34 @@ public class CustomTable extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				AddUserForm.init(model);
-
+				addUserForm.init(model);
+				
 			}
 		});
 
 		ButtonsRenderer renderer = new ButtonsRenderer();
 
-		table.getColumnModel().getColumn(5).setCellRenderer(renderer);
-		table.getColumnModel().getColumn(5).setCellEditor(new ButtonsEditor());
-		table.getColumnModel().getColumn(0).setMaxWidth(0);
-		table.getColumnModel().getColumn(0).setMinWidth(0);
-		table.getColumnModel().getColumn(0).setPreferredWidth(0);
-		table.getColumnModel().getColumn(2).setMaxWidth(0);
-		table.getColumnModel().getColumn(2).setMinWidth(0);
-		table.getColumnModel().getColumn(2).setPreferredWidth(0);
-		table.getColumnModel().getColumn(5).setCellEditor(new ButtonsEditor());
-		table.getColumnModel().getColumn(4).setPreferredWidth(15);
+		table.getColumnModel().getColumn(4).setCellRenderer(renderer);
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonsEditor());
+		table.getColumnModel().getColumn(1).setMaxWidth(0);
+		table.getColumnModel().getColumn(1).setMinWidth(0);
+		table.getColumnModel().getColumn(1).setPreferredWidth(0);
 		table.getColumnModel().getColumn(3).setPreferredWidth(15);
-		table.setRowHeight(
-				renderer.getTableCellRendererComponent(table, null, true, true, 0, 0).getPreferredSize().height);
+		table.getColumnModel().getColumn(2).setPreferredWidth(15);
+		table.setRowHeight(renderer.getTableCellRendererComponent(table, null, true, true, 0, 0).getPreferredSize().height);
 
-	}
-
-	public JPanel init() {
-		CustomTable tt = new CustomTable();
-		tt.setVisible(true);
-
-		return tt;
+		return this;
 	}
 
 	public static class Data {
 
-		private int id;
 		private String username;
 		private String password;
 		private String role;
 		private String application;
 		private boolean state;
 
-		public Data(int id, String username, String password, String role, boolean state, String application) {
-			this.setId(id);
+		public Data(String username, String password, String role, boolean state, String application) {
 			this.setUsername(username);
 			this.setPassword(password);
 			this.setRole(role);
@@ -119,14 +110,6 @@ public class CustomTable extends JPanel {
 
 		public void setUsername(String username) {
 			this.username = username;
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(int id) {
-			this.id = id;
 		}
 
 		public String getPassword() {
@@ -180,21 +163,18 @@ public class CustomTable extends JPanel {
 			String value = null;
 			switch (column) {
 			case 0:
-				value = "ID";
-				break;
-			case 1:
 				value = "Username";
 				break;
-			case 2:
+			case 1:
 				value = "Password";
 				break;
-			case 3:
+			case 2:
 				value = "Role";
 				break;
-			case 4:
+			case 3:
 				value = "Enabled";
 				break;
-			case 5:
+			case 4:
 				value = "Actions";
 				break;
 			}
@@ -232,7 +212,7 @@ public class CustomTable extends JPanel {
 
 		@Override
 		public int getColumnCount() {
-			return 6;
+			return 5;
 		}
 
 		@Override
@@ -241,18 +221,15 @@ public class CustomTable extends JPanel {
 			Object value = null;
 			switch (columnIndex) {
 			case 0:
-				value = obj.getId();
-				break;
-			case 1:
 				value = obj.getUsername();
 				break;
-			case 2:
+			case 1:
 				value = obj.getPassword();
 				break;
-			case 3:
+			case 2:
 				value = obj.getRole();
 				break;
-			case 4:
+			case 3:
 				value = obj.isState();
 			}
 			return value;
@@ -260,23 +237,23 @@ public class CustomTable extends JPanel {
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			if (columnIndex == 5) {
+			if (columnIndex == 4) {
 
 				System.out.println(aValue);
 
 				Data value = data.get(rowIndex);
 				if ("edit".equals(aValue)) {
-					EditUserForm.init(this, value);
+					editUserForm.init(this, value);
 
 				} else {
 
 					remove(value);
-					PostgreSQLJDBCDelete.deleteUser(value.getUsername());
+					del.deleteUser(value.getUsername());
 					fireTableCellUpdated(rowIndex, columnIndex);
 				}
 
 			}
-			if (columnIndex == 4) {
+			if (columnIndex == 3) {
 				Data value = data.get(rowIndex);
 				if ((boolean) aValue == true) {
 					value.setState(true);
@@ -300,6 +277,10 @@ public class CustomTable extends JPanel {
 			data.remove(value);
 			fireTableRowsDeleted(startIndex, startIndex);
 		}
+		
+		public void removeAll() {
+			data.clear();
+		}
 
 		public void update(Data oldValue, Data newValue) {
 
@@ -311,7 +292,7 @@ public class CustomTable extends JPanel {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return columnIndex == 4 || columnIndex == 5;
+			return columnIndex == 3 || columnIndex == 4;
 		}
 	}
 
