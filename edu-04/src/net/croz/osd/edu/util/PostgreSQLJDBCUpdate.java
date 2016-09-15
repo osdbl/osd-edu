@@ -32,15 +32,21 @@ public class PostgreSQLJDBCUpdate {
 			String pass = bcpe.encode(new_user.getPassword());
 			String sql;
 			if (!old_user.getPassword().equals(new_user.getPassword())) {
-				sql = "UPDATE users set username ='" + new_user.getUsername() + "', password='" + pass + "',enabled="+ new_user.isState() + " where username ='" + old_user.getUsername() + "';";
+				sql = "UPDATE users set username ='" + new_user.getUsername() + "',password='" + pass + "',enabled="
+						+ new_user.isState() + " where username ='" + old_user.getUsername() + "';";
 			} else {
-				sql = "UPDATE users set username ='" + new_user.getUsername() + "',enabled=" + new_user.isState()+ " where username ='" + old_user.getUsername() + "';";
+				sql = "UPDATE users set username ='" + new_user.getUsername() + "',enabled=" + new_user.isState()
+						+ " where username ='" + old_user.getUsername() + "';";
 			}
 			stmt.executeUpdate(sql);
-			String sql1;
-			sql1 = "UPDATE authorities set authority='" + new_user.getRole() + "' where username ='"
-					+ old_user.getUsername() + "' AND authority='" + old_user.getRole() + "';";
-			stmt.executeUpdate(sql1);
+			if(new_user.getRole()=="ROLE_USER"){
+				String sql1="DELETE FROM authorities WHERE username='"+new_user.getUsername()+"' AND authority='ROLE_ADMIN';";
+				stmt.executeUpdate(sql1);
+			}
+			else if(!new_user.getRole().equals(old_user.getRole())){
+				String sql2="INSERT INTO authorities VALUES ('"+new_user.getUsername()+"','ROLE_ADMIN');";
+				stmt.executeUpdate(sql2);
+			}
 			c.commit();
 			System.out.println("Operation done successfully");
 

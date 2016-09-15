@@ -27,9 +27,13 @@ public class PostgreSQLJDBCInsert {
 			stmt = c.createStatement();
 			String sql = "INSERT INTO users (username,password,enabled) VALUES ('" + username + "','" + password + "',"
 					+ enabled + ");";
-			String sql1 = "INSERT INTO authorities (username,authority) VALUES ('" + username + "','" + role + "');";
+			String sql1 = "INSERT INTO authorities (username,authority) VALUES ('" + username + "','ROLE_USER');";
 			stmt.executeUpdate(sql);
 			stmt.executeUpdate(sql1);
+			if(role=="ROLE_ADMIN"){
+				String sql2="INSERT INTO authorities (username,authority) VALUES ('" + username + "','ROLE_ADMIN');";
+				stmt.executeUpdate(sql2);
+			}
 			c.commit();
 			System.out.println("Operation done successfully");
 

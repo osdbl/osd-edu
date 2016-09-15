@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
 import net.croz.osd.edu.util.PostgreSQLJDBCInsert;
+import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
 
 @Component
 public class AddUserForm extends JDialog {
@@ -38,6 +39,9 @@ public class AddUserForm extends JDialog {
 
 	@Autowired
 	PostgreSQLJDBCInsert ins;
+	
+	@Autowired
+	PostgreSQLJDBCReturn ret;
 
 	public AddUserForm init(MyTableModel model) {
 
@@ -81,7 +85,7 @@ public class AddUserForm extends JDialog {
 				Data newUser = new Data(username.getText(), pass, (String) role.getSelectedItem(),
 						enabled.isSelected(), "");
 
-				model.add(newUser);
+				ret.getDatabase(model);
 
 				model.fireTableDataChanged();
 				dispose();

@@ -29,8 +29,18 @@ public class PostgreSQLJDBCReturn {
 		Statement stmt = null;
 		try {
 			stmt = c.createStatement();
-			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM users JOIN authorities ON (users.username=authorities.username);");
+			ResultSet rs = stmt.executeQuery(
+					"SELECT * FROM (SELECT u.username,u.password,a.authority,u.enabled "
+					+ "FROM users u JOIN authorities a ON u.username=a.username "
+					+ "WHERE a.authority='ROLE_ADMIN' "
+					+ "UNION "
+					+ "SELECT u.username,u.password,a.authority,u.enabled "
+					+ "FROM users u JOIN authorities a ON u.username=a.username "
+					+ "WHERE a.authority='ROLE_USER' AND "
+					+ "NOT EXISTS(SELECT u1.username,u1.password,a1.authority,u1.enabled "
+					+ "FROM users u1 JOIN authorities a1 ON u1.username=a1.username "
+					+ "WHERE a1.authority='ROLE_ADMIN' AND u1.username=u.username)) AS p "
+					+ "ORDER BY username;");
 
 			while (rs.next()) {
 				String username = rs.getString("username");
