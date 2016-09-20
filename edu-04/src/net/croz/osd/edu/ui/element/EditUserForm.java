@@ -10,16 +10,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.croz.osd.edu.jdbc.UsersDao;
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
-import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
-import net.croz.osd.edu.util.PostgreSQLJDBCUpdate;
 
 @Component
 public class EditUserForm extends JDialog {
@@ -28,7 +29,8 @@ public class EditUserForm extends JDialog {
 	public JLabel u;
 	public JPasswordField password;
 	public JLabel p;
-	public JComboBox<String> role;
+	public JCheckBox roleUser;
+	public JCheckBox roleAdmin;
 	public JLabel r;
 	public JLabel e;
 	public JCheckBox enabled;
@@ -36,23 +38,34 @@ public class EditUserForm extends JDialog {
 	public JButton cancel;
 
 	@Autowired
-	PostgreSQLJDBCUpdate upd;
+	UsersDao usersDao;
 	
 	@Autowired
-	PostgreSQLJDBCReturn ret;
+	CustomTable customTable;
 
 	public EditUserForm init(MyTableModel model, Data user) {
-
+		
+		getContentPane().removeAll();
 		setTitle("Edit User");
 		setModal(true);
 		username = new JTextField(user.getUsername());
-
 		u = new JLabel("Username :");
 		password = new JPasswordField(user.getPassword());
+		
 		p = new JLabel("Password :");
-		role = new JComboBox<>(new String[] { "ROLE_USER", "ROLE_ADMIN" });
-		role.setSelectedItem(user.getRole());
-		r = new JLabel("Role :");
+		roleUser=new JCheckBox("User");
+		roleAdmin=new JCheckBox("Admin");
+		if (user.getRole()==null){
+			roleUser.setSelected(false);
+			roleAdmin.setSelected(false);
+		}
+		else{
+		if(user.getRole().contains("ROLE_USER"))
+			roleUser.setSelected(true);
+		if(user.getRole().contains("ROLE_ADMIN"))
+			roleAdmin.setSelected(true);
+		}
+		r = new JLabel("Roles :");
 		enabled = new JCheckBox("", user.isState());
 		e = new JLabel("Enabled :");
 		save = new JButton("Save");
@@ -71,14 +84,25 @@ public class EditUserForm extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				Data updatedUser = new Data(username.getText(), password.getText(), (String) role.getSelectedItem(),
-						enabled.isSelected(), user.getApplication());
-				upd.updateUser(user, updatedUser);
-				ret.getDatabase(model);
+				if(username.getText().equals("") || password.getText().equals("")){
+					JOptionPane.showMessageDialog(null, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else{
+				String s="";
+				if(roleUser.isSelected())
+					s+="ROLE_USER,";
+				if(roleAdmin.isSelected())
+					s+="ROLE_ADMIN,";
+				if(s.length()>0)
+					s=s.substring(0, s.length()-1);
+				
+				Data updatedUser = new Data(username.getText(), password.getText(), s,	enabled.isSelected(), user.getApplication());
+				usersDao.updateUser(customTable.dataToUser(user), customTable.dataToUser(updatedUser));
+				customTable.fillModel(model);
 				model.fireTableDataChanged();
 				dispose();
 				getContentPane().removeAll();
+			}
 			}
 		});
 
@@ -87,7 +111,9 @@ public class EditUserForm extends JDialog {
 		add(p);
 		add(password);
 		add(r);
-		add(role);
+		add(roleUser);
+		add(new JPanel());
+		add(roleAdmin);
 		add(e);
 		add(enabled);
 		add(save);

@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -18,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import net.croz.osd.edu.jdbc.UsersDao;
 import net.croz.osd.edu.ui.element.CustomTable.Data;
 import net.croz.osd.edu.ui.element.CustomTable.MyTableModel;
-import net.croz.osd.edu.util.PostgreSQLJDBCInsert;
-import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
 
 @Component
 public class AddUserForm extends JDialog {
@@ -29,34 +28,33 @@ public class AddUserForm extends JDialog {
 	public JLabel u;
 	public JPasswordField password;
 	public JLabel p;
-	public JComboBox<String> role;
+	public JCheckBox roleUser;
+	public JCheckBox roleAdmin;
 	public JLabel r;
 	public JLabel e;
 	public JCheckBox enabled;
 	public JButton save;
 	public JButton cancel;
-	//public JPanel panel;
 
 	@Autowired
-	PostgreSQLJDBCInsert ins;
+	UsersDao usersDao;
 	
 	@Autowired
-	PostgreSQLJDBCReturn ret;
+	CustomTable customTable;
 
 	public AddUserForm init(MyTableModel model) {
 
+		getContentPane().removeAll();
 		setTitle("Add New User");
 		setModal(true);
-		//panel = new JPanel();
 
 		username = new JTextField();
-
 		u = new JLabel("Username :");
 		password = new JPasswordField();
 		p = new JLabel("Password :");
-		role = new JComboBox<>(new String[] { "ROLE_USER", "ROLE_ADMIN" });
-		role.setSelectedItem("ROLE_USER");
-		r = new JLabel("Role :");
+		roleUser=new JCheckBox("User");
+		roleAdmin=new JCheckBox("Admin");
+		r = new JLabel("Roles :");
 		enabled = new JCheckBox("", true);
 		e = new JLabel("Enabled :");
 		save = new JButton("Save");
@@ -76,20 +74,28 @@ public class AddUserForm extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				if(username.getText().equals("") || password.getText().equals("")){
+					JOptionPane.showMessageDialog(null, "Fields cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else{
 				BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 				String pass = bcpe.encode(password.getText());
 				
-				ins.insertUser(username.getText(),pass , (String) role.getSelectedItem(),
-						enabled.isSelected());
-				Data newUser = new Data(username.getText(), pass, (String) role.getSelectedItem(),
-						enabled.isSelected(), "");
-
-				ret.getDatabase(model);
-
+				String s="";
+				if(roleUser.isSelected())
+					s+="ROLE_USER,";
+				if(roleAdmin.isSelected())
+					s+="ROLE_ADMIN,";
+				if(s.length()>0)
+					s=s.substring(0, s.length()-1);
+			
+				usersDao.addUser(customTable.dataToUser(new Data(username.getText(), pass, s,enabled.isSelected(), "")));
+				customTable.fillModel(model);
+				
 				model.fireTableDataChanged();
 				dispose();
 				getContentPane().removeAll();
+				}
 			}
 		});
 
@@ -98,7 +104,9 @@ public class AddUserForm extends JDialog {
 		add(p);
 		add(password);
 		add(r);
-		add(role);
+		add(roleUser);
+		add(new JPanel());
+		add(roleAdmin);
 		add(e);
 		add(enabled);
 		add(save);

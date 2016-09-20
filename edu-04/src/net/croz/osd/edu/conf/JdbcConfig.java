@@ -10,8 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 public class JdbcConfig {
 
-	@Bean(name = "dataSource")
-	@Scope("prototype")
+	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 		driverManagerDataSource.setDriverClassName("org.postgresql.Driver");

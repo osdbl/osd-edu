@@ -7,8 +7,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
@@ -22,18 +25,15 @@ import javax.swing.table.TableCellEditor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import net.croz.osd.edu.util.PostgreSQLJDBCDelete;
-import net.croz.osd.edu.util.PostgreSQLJDBCReturn;
+import net.croz.osd.edu.domain.User;
+import net.croz.osd.edu.domain.UserRole;
+import net.croz.osd.edu.jdbc.UsersDao;
 
 @org.springframework.stereotype.Component
 public class CustomTable extends JPanel {
-	// @Autowired
-	// DataSource dataSource;
 
 	@Autowired
-	PostgreSQLJDBCReturn ret;
-	@Autowired
-	PostgreSQLJDBCDelete del;
+	UsersDao usersDao;
 
 	@Autowired
 	AddUserForm addUserForm;
@@ -52,10 +52,7 @@ public class CustomTable extends JPanel {
 			}
 		};
 
-		// if (dataSource.getConnection() != null) {
-		ret.getDatabase(model);
-		// }
-
+		fillModel(model);
 		JTable table = new JTable(model);
 		JButton add = new JButton("Add New User");
 
@@ -70,7 +67,7 @@ public class CustomTable extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				addUserForm.init(model);
-				
+
 			}
 		});
 
@@ -83,7 +80,8 @@ public class CustomTable extends JPanel {
 		table.getColumnModel().getColumn(1).setPreferredWidth(0);
 		table.getColumnModel().getColumn(3).setPreferredWidth(15);
 		table.getColumnModel().getColumn(2).setPreferredWidth(15);
-		table.setRowHeight(renderer.getTableCellRendererComponent(table, null, true, true, 0, 0).getPreferredSize().height);
+		table.setRowHeight(
+				renderer.getTableCellRendererComponent(table, null, true, true, 0, 0).getPreferredSize().height);
 
 		return this;
 	}
@@ -169,7 +167,7 @@ public class CustomTable extends JPanel {
 				value = "Password";
 				break;
 			case 2:
-				value = "Role";
+				value = "Roles";
 				break;
 			case 3:
 				value = "Enabled";
@@ -248,7 +246,7 @@ public class CustomTable extends JPanel {
 				} else {
 
 					remove(value);
-					del.deleteUser(value.getUsername());
+					usersDao.deleteUser(dataToUser(value));
 					fireTableCellUpdated(rowIndex, columnIndex);
 				}
 
@@ -277,7 +275,7 @@ public class CustomTable extends JPanel {
 			data.remove(value);
 			fireTableRowsDeleted(startIndex, startIndex);
 		}
-		
+
 		public void removeAll() {
 			data.clear();
 		}
@@ -292,7 +290,7 @@ public class CustomTable extends JPanel {
 
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return columnIndex == 3 || columnIndex == 4;
+			return columnIndex == 4;
 		}
 	}
 
@@ -394,6 +392,50 @@ public class CustomTable extends JPanel {
 				buttonsPane.setBackground(table.getBackground());
 			}
 			return buttonsPane;
+		}
+	}
+
+	public User dataToUser(Data data) {
+		List<String> stringList = new ArrayList<>();
+		User u = new User(data.getUsername(), data.getPassword(), data.isState(), null);
+		System.out.println(data.getRole());
+		if (data.getRole()!=null) {
+			stringList = Arrays.asList(data.getRole().split(","));
+			ArrayList<UserRole> list = new ArrayList<UserRole>();
+			for (int i = 0; i < stringList.size(); i++) {
+				list.add(new UserRole(u, stringList.get(i)));
+			}
+			Set<UserRole> roles = new HashSet<UserRole>(list);
+			u.setRoles(roles);
+		}
+		return u;
+	}
+
+	public Data userToData(User user) {
+		ArrayList<UserRole> list = new ArrayList<UserRole>(user.getRoles());
+		String s = convert(list);
+		return new Data(user.getUsername(), user.getPassword(), s, user.isEnabled(), "");
+	}
+
+	public String convert(ArrayList<UserRole> list) {
+		String s = "";
+		list.sort(null);
+		for (int i = 0; i < list.size() - 1; i++) {
+			s += list.get(i).getRole() + ",";
+		}
+		if (list.size() > 0)
+			s += list.get(list.size() - 1).getRole();
+		if (s.equals(""))
+			return null;
+		return s;
+	}
+
+	public void fillModel(MyTableModel model) {
+		model.removeAll();
+		List<User> users = usersDao.getUsers();
+		users.sort(null);
+		for (int i = 0; i < users.size(); i++) {
+			model.add(userToData(users.get(i)));
 		}
 	}
 
