@@ -27,6 +27,12 @@ public class BasicUsersDaoImpl implements UsersDao {
 
 	Connection c;
 
+	@Override
+	public List<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 /*	@Override
 	public List<User> getUsers() {
 		List<User> users = new ArrayList<>();
@@ -62,7 +68,7 @@ public class BasicUsersDaoImpl implements UsersDao {
 		}
 
 		return users;
-	}*/
+	}
 	
 	@Override
 	public List<User> getUsersByStatus(boolean active) {
@@ -355,5 +361,5 @@ public class BasicUsersDaoImpl implements UsersDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	*/
 }

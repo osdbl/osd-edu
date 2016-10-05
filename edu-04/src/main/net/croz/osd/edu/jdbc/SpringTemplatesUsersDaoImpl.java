@@ -23,9 +23,7 @@ import net.croz.osd.edu.domain.UserRole;
 
 @Repository
 public class SpringTemplatesUsersDaoImpl implements UsersDao {
-
 	private JdbcTemplate jdbcTemplate;
-
 	private HibernateTemplate hibernateTemplate;
 
 	@Autowired
@@ -34,6 +32,13 @@ public class SpringTemplatesUsersDaoImpl implements UsersDao {
 		this.hibernateTemplate = new HibernateTemplate(sessionFactory);
 	}
 
+	@Override
+	public List<User> getUsers() {
+		return hibernateTemplate.loadAll(User.class);
+	}
+
+	
+	/*
 	@Override
 	public List<User> getUsers() {
 		return this.jdbcTemplate.query(
@@ -67,48 +72,15 @@ public class SpringTemplatesUsersDaoImpl implements UsersDao {
 					}
 				});
 	}
-
+	*/
+	
+	/*
 	@Override
 	public List<User> getUsersByStatus(boolean active) {
 		return this.jdbcTemplate.query("SELECT username,enabled FROM users WHERE enabled= ?", new Object[] { active },
 				new BeanPropertyRowMapper<User>(User.class));
 	}
 
-	@Override
-	public List<UserRole> getUserRoles(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addUser(User user) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void updateUser(User oldUser, User newUser) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteUser(User user) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addUserRoles(User user) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteUserRoles(User user) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public User findUserByUsername(String username) {
@@ -116,5 +88,5 @@ public class SpringTemplatesUsersDaoImpl implements UsersDao {
 		hibernateTemplate.load(user, "jsajlovic");
 		return user;
 	}
-
+	 */
 }

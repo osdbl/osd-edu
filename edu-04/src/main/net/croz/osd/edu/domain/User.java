@@ -1,6 +1,5 @@
 package net.croz.osd.edu.domain;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,16 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "users")
-public class User implements Comparable<User>,Serializable{
-
-
+public class User {
 	private String username;
 	private String password;
 	private boolean enabled;
 	private Set<UserRole> userRole;
+	
+	public User() {}
 	
 	public User(String username, String password, boolean enabled, Set<UserRole> userRole) {
 		this.setUsername(username);
@@ -28,14 +26,11 @@ public class User implements Comparable<User>,Serializable{
 		this.setRoles(userRole);
 	}
 	
-	public User(){}
 	
-	@Id
-	@Column(name = "username")
+	@Id @Column
 	public String getUsername() {
 		return username;
 	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -44,7 +39,6 @@ public class User implements Comparable<User>,Serializable{
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -53,33 +47,23 @@ public class User implements Comparable<User>,Serializable{
 	public boolean isEnabled() {
 		return enabled;
 	}
-
-	
-
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
-	//@Transient
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userRolePK.username")
 	public Set<UserRole> getRoles() {
 		return userRole;
 	}
-
 	public void setRoles(Set<UserRole> userRole) {
 		this.userRole = userRole;
 	}
-	
-	@Override
-	public int compareTo(User user) {
-		return this.getUsername().compareTo(user.getUsername());
-	}
 
+	
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", enabled=" + enabled + ", userRole="
 				+ userRole + "]";
 	}
-	
 	
 }

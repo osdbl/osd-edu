@@ -26,22 +26,30 @@ public class UserDaoTest {
 	@Qualifier("springTemplatesUsersDaoImpl")
 	UsersDao springTemplatesUsersDao;
 	
-
+	
+	@Test
+	public void getUsers(){
+		List<User> users = springTemplatesUsersDao.getUsers();
+		
+		for (User usr : users)
+			System.out.println(usr);
+	}
+	
+	
+	
+/*
 	@Test
 	public void testabc() {
-
 		Assert.isInstanceOf(BasicUsersDaoImpl.class, basicUsersDao);
-
 		Assert.isInstanceOf(SpringTemplatesUsersDaoImpl.class, springTemplatesUsersDao);
-
 	}
 
 	@Test
 	public void testbaze() {
-		/*List<User> users = basicUsersDao.getUsers();
+		List<User> users = basicUsersDao.getUsers();
 		Assert.isTrue(users.size() == 3);
 		for (int i = 0; i < users.size(); i++)
-			System.out.println(users.get(i).getUsername() + "," + users.get(i).getRoles().size());*/
+			System.out.println(users.get(i).getUsername() + "," + users.get(i).getRoles().size());
 		
 		List<User> users = springTemplatesUsersDao.getUsers();
 		Assert.isTrue(users.size() == 3);
@@ -51,21 +59,18 @@ public class UserDaoTest {
 	
 	@Test
 	public void testActiveUsers(){
-		
 		List<User> users=basicUsersDao.getUsersByStatus(false);
 		Assert.isTrue(users.size() == 1);
 		for (int i = 0; i < users.size(); i++)
 			System.out.println(users.get(i).getUsername() );
-		
 	}
 	
 	@Test
 	public void testFindUser(){
-		
 		User user = springTemplatesUsersDao.findUserByUsername("jsajlovic");
 		System.out.println(user);
 	}
-	
+*/	
 	
 
 }
