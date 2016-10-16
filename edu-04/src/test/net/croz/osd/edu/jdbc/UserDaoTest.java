@@ -1,76 +1,86 @@
 package net.croz.osd.edu.jdbc;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import net.croz.osd.edu.conf.JdbcConfig;
+import net.croz.osd.edu.domain.User;
+import net.croz.osd.edu.domain.UserRole;
+
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Assert;
-
-import net.croz.osd.edu.conf.AppConfig;
-import net.croz.osd.edu.conf.JdbcConfig;
-import net.croz.osd.edu.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = JdbcConfig.class)
+@ContextConfiguration(classes = {JdbcConfig.class})
 public class UserDaoTest {
-
-	@Autowired
-	@Qualifier("basicUsersDaoImpl")
-	UsersDao basicUsersDao;
-
-	@Autowired
-	@Qualifier("springTemplatesUsersDaoImpl")
-	UsersDao springTemplatesUsersDao;
+	@Autowired private Map<String, UsersDao> usersDaoMap;
+	@Autowired Environment env;
 	
+	UsersDao usersDao;
+	
+	@Before
+	public void selectDao() {
+		usersDao = usersDaoMap.get(env.getProperty("userDao.impl"));
+	}
 	
 	@Test
-	public void getUsers(){
-		List<User> users = springTemplatesUsersDao.getUsers();
+	public void loadAndSaveUsers() {
+		List<User> existingUsers = usersDao.loadUsers();
 		
-		for (User usr : users)
+		// change status of user 'admin'
+		User adminOld = null;
+		for (User usr : existingUsers) {
 			System.out.println(usr);
-	}
-	
-	
-	
-/*
-	@Test
-	public void testabc() {
-		Assert.isInstanceOf(BasicUsersDaoImpl.class, basicUsersDao);
-		Assert.isInstanceOf(SpringTemplatesUsersDaoImpl.class, springTemplatesUsersDao);
-	}
-
-	@Test
-	public void testbaze() {
-		List<User> users = basicUsersDao.getUsers();
-		Assert.isTrue(users.size() == 3);
-		for (int i = 0; i < users.size(); i++)
-			System.out.println(users.get(i).getUsername() + "," + users.get(i).getRoles().size());
+			if ("admin".equals(usr.getUsername())) 
+				adminOld = usr;
+		}
+		Assert.assertNotNull(adminOld);
+		boolean adminOldStatus = adminOld.isEnabled();
+		adminOld.setEnabled(!adminOldStatus);
 		
-		List<User> users = springTemplatesUsersDao.getUsers();
-		Assert.isTrue(users.size() == 3);
-		for (int i = 0; i < users.size(); i++)
-			System.out.println(users.get(i).getUsername() + "," + users.get(i).getRoles().size());
+		
+		// add new user and save all
+		User newUser = createUserWithRoles();
+		existingUsers.add(newUser);
+		usersDao.saveUsers(existingUsers);
+		
+		
+		// test update and insert operations
+		User adminUpdated = null;
+		User savedNewUser = null;
+		
+		for (User usr : usersDao.loadUsers()) {
+			System.out.println(usr);
+			if ("admin".equals(usr.getUsername()))
+				adminUpdated = usr;
+			else if (newUser.getUsername().equals(usr.getUsername()))
+				savedNewUser = usr;
+		}
+		
+		Assert.assertNotNull(adminUpdated);
+		Assert.assertNotSame(adminUpdated.isEnabled(), adminOldStatus);
+		Assert.assertNotNull(savedNewUser);
+		Assert.assertEquals(2, savedNewUser.getRoles().size());
 	}
 	
-	@Test
-	public void testActiveUsers(){
-		List<User> users=basicUsersDao.getUsersByStatus(false);
-		Assert.isTrue(users.size() == 1);
-		for (int i = 0; i < users.size(); i++)
-			System.out.println(users.get(i).getUsername() );
-	}
 	
-	@Test
-	public void testFindUser(){
-		User user = springTemplatesUsersDao.findUserByUsername("jsajlovic");
-		System.out.println(user);
+	private User createUserWithRoles() {
+		String username = "user_" + Math.random();
+		String password = "xxxxxxxxxx";
+		
+		UserRole test01 = new UserRole(username, "TEST_01");
+		UserRole test02 = new UserRole(username, "TEST_02");
+		Set<UserRole> roles = new HashSet<UserRole>(Arrays.asList(test01, test02));
+		
+		return new User(username, password, false, roles);
 	}
-*/	
-	
-
 }

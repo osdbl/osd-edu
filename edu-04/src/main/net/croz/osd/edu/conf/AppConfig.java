@@ -14,8 +14,7 @@ import org.springframework.core.io.FileSystemResource;
 @PropertySource("classpath:/net/croz/osd/edu/conf/app.properties")
 @ComponentScan(basePackages = "net.croz.osd.edu")
 public class AppConfig {
-	@Autowired
-    Environment env;
+	@Autowired Environment env;
 	
 	@Bean
 	public PropertiesFactoryBean propertiesFactoryBean() {

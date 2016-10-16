@@ -2,6 +2,7 @@ package net.croz.osd.edu.domain;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,14 +19,13 @@ public class User {
 	private Set<UserRole> userRole;
 	
 	public User() {}
-	
-	public User(String username, String password, boolean enabled, Set<UserRole> userRole) {
-		this.setUsername(username);
-		this.setPassword(password);
-		this.setEnabled(enabled);
-		this.setRoles(userRole);
+	public User(String username, String password, boolean enabled,Set<UserRole> userRole) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.userRole = userRole;
 	}
-	
 	
 	@Id @Column
 	public String getUsername() {
@@ -51,7 +51,7 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userRolePK.username")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "username", cascade = CascadeType.ALL)
 	public Set<UserRole> getRoles() {
 		return userRole;
 	}
@@ -59,7 +59,6 @@ public class User {
 		this.userRole = userRole;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", enabled=" + enabled + ", userRole="
