@@ -32,7 +32,7 @@ public class ShapeTest {
 	}
 	
 	@Test
-	public void testTrianglePerimeter() {
+	public void testTriangleAngle() {
 
 		assertEquals(60, triangle.angle(), 0.01);
 		
