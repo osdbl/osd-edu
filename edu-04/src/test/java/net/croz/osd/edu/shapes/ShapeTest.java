@@ -18,7 +18,7 @@ public class ShapeTest {
 		
 		circle.setRadius(5.5);
 		
-		assertEquals(95.03, circle.area(), 0.01);
+		assertEquals(93.04, circle.area(), 0.01);
 		
 	}
 	
