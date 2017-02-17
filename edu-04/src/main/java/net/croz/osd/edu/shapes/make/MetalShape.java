@@ -13,7 +13,7 @@ public class MetalShape extends MakeShape{
 	
 	@Override
 	protected void drawShape() {
-		//System.out.println("MetalShape is drawn!");
+		System.out.println("MetalShape is drawn!");
 	}
 	
 }
