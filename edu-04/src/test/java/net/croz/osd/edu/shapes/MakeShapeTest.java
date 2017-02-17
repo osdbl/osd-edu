@@ -4,24 +4,28 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class MakeShapeTest {
+import net.croz.osd.edu.shapes.make.MakeShape;
+import net.croz.osd.edu.shapes.make.PaperShape;
 
+public class MakeShapeTest {
+	
+	
+public static void main(String[]args){
+		
+		MakeShape makeShape = new net.croz.osd.edu.shapes.make.PaperShape();
+		MakeShape makeShape1 = new net.croz.osd.edu.shapes.make.MetalShape();
+		makeShape.makeShape("crvena");
+		System.out.println();
+		makeShape1.makeShape("plava");
+		
+		}
+	
 	@Test
 	public void testColorPaperShape() {
-		PaperShape test=new PaperShape();
-		test.setColor("plava");
-		assertEquals("plava",test.getColor());
+		MakeShape test=new net.croz.osd.edu.shapes.make.PaperShape();
+		((PaperShape) test).setColor("plava");
+		assertEquals("plava", ((PaperShape) test).getColor());
 	}
-	@Test
-	public void testColorPlasticShape(){
-		PlasticShape test=new PlasticShape();
-		test.setColor("zelena");
-		assertEquals("zelena",test.getColor());
-	}
-	@Test
-	public void testThick(){
-		PlasticShape test=new PlasticShape();
-		test.setThick(5);
-		assertEquals(5,test.getThick());
-	}
+
+	
 }
