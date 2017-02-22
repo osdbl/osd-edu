@@ -174,5 +174,10 @@
   		<artifactId>hibernate-core</artifactId>
   		<version>4.1.4.Final</version>
   	</dependency>
+  	<dependency>
+  		<groupId>shapes</groupId>
+  		<artifactId>shapes</artifactId>
+  		<version>1.0</version>
+  	</dependency>
   </dependencies>
 </project>
