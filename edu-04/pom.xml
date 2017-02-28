@@ -4,6 +4,7 @@
   <groupId>edu-04</groupId>
   <artifactId>shapes</artifactId>
   <version>1.0</version>
+  <packaging>jar</packaging>
  
   <build>
             
@@ -91,10 +92,8 @@
   		<artifactId>hibernate-core</artifactId>
   		<version>4.1.4.Final</version>
   	</dependency>
-  	<dependency>
-  		<groupId>edu-04</groupId>
-  		<artifactId>shapes</artifactId>
-  		<version>1.0</version>
-  	</dependency>
-  </dependencies>
+    </dependencies>
+
+
 </project>
+
