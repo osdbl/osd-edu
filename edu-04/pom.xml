@@ -92,7 +92,7 @@
   		<version>4.1.4.Final</version>
   	</dependency>
   	<dependency>
-  		<groupId>shapes</groupId>
+  		<groupId>edu-04</groupId>
   		<artifactId>shapes</artifactId>
   		<version>1.0</version>
   	</dependency>
